@@ -784,7 +784,7 @@ function FESpaces.FESpaceWithConstantFixed(
 
   trian = get_triangulation(space)
   model = get_background_model(trian)
-  gids  =  generate_gids(model,spaces)
+  gids = generate_gids(trian,spaces)
   vector_type = _find_vector_type(spaces,gids)
   return DistributedSingleFieldFESpace(spaces,gids,trian,vector_type)
 end
