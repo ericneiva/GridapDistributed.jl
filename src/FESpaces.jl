@@ -893,7 +893,7 @@ function FESpaces.ConstantFESpace(
   @assert constraint_type ∈ [:global,:local]
   if constraint_type == :global
     msg = "ConstantFESpace is NOT scalable in parallel. For testing purposes only."
-    @warn msg
+    @warn msg maxlog=1
   end
 
   spaces = map(local_views(model)) do model
