@@ -902,12 +902,18 @@ function FESpaces.ConstantFESpace(
   # Single dof, owned by processor 1 (ghost for all other processors)
   nranks = length(spaces)
   cell_gids = get_cell_gids(model)
-  indices = map(partition(cell_gids)) do cell_indices
+  indices = map(partition(cell_gids),spaces) do cell_indices,space
     me = part_id(cell_indices)
     if constraint_type == :global
-      LocalIndices(1,me,Int[1],Int32[1])
+      LocalIndices(num_free_dofs(space),
+                   me,
+                   Int.(1:num_free_dofs(space)),
+                   Int32.(collect(Fill(1,num_free_dofs(space)))))
     else
-      LocalIndices(nranks,me,Int[me],Int32[me])
+      LocalIndices(nranks*num_free_dofs(space),
+                   me,
+                   (me-1)*num_free_dofs(space).+Int.(1:num_free_dofs(space)),
+                   Int32.(collect(Fill(me,num_free_dofs(space)))))
     end
   end
   gids = PRange(indices)
